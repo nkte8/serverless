@@ -1,0 +1,28 @@
+#.gitlab-ci.yml
+
+stages:
+  - build
+
+ydl-downloader:
+  tags: [docker]
+  stage: build
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build ./${CI_JOB_NAME} -t "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+    - docker push "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+
+ydl-converter:
+  tags: [docker]
+  stage: build
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build ./${CI_JOB_NAME} -t "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+    - docker push "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+
+ydl-apiserver:
+  tags: [docker]
+  stage: build
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build ./${CI_JOB_NAME} -t "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+    - docker push "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"

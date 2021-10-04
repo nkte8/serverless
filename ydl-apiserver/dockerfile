@@ -1,0 +1,11 @@
+FROM golang:1.15.6 as builder
+
+ENV GOPATH=
+
+WORKDIR /go
+COPY . .
+RUN ls
+RUN go mod download
+RUN go build -o ./metric-server ./src/main.go
+
+CMD ["./metric-server"]
