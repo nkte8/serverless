@@ -44,7 +44,7 @@ if __name__ == "__main__":
         else:
             fname=info_dict.get("title") + "." + res.get("fmt")
             os.rename(info_dict.get("title") + ".video", fname)
-            p_info=stat_to_json("../")
+            p_info=stat_to_json("./")
             os.chown(fname,uid=p_info.get("st_uid"),gid=p_info.get("st_gid"))
     ret = len(glob.glob(glob.escape(info_dict.get("title"))+"*")) > 0
     if (audio.get("format") != "") & ret:
