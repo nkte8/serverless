@@ -1,0 +1,39 @@
+#https://keda.sh/docs/2.1/concepts/scaling-jobs/
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: ydl-downloader
+spec:
+  jobTargetRef:
+    completions: 1
+    parallelism: 1
+    backoffLimit: 0
+    template:
+      spec:
+        containers:
+          - image: registry.neko.lab:5005/root/serverless/ydl-downloader
+            name: ydl-downloader
+            imagePullPolicy: Always
+            volumeMounts:
+              - mountPath: /download
+                name: savedir
+            env:
+              - name: TZ
+                value: Asia/Tokyo
+              - name: REST_URL
+                value: "http://ydl-apiserver.default.svc.cluster.local/"
+        restartPolicy: Never
+        volumes:
+          - name: savedir
+            glusterfs:
+              endpoints: glusterfs-cluster
+              path: /gvol/Data/Temporary
+              readOnly: false
+  maxReplicaCount: 5
+  successfulJobsHistoryLimit: 5
+  triggers:
+    - type: metrics-api
+      metadata:
+        targetValue: "1"
+        url: "http://ydl-apiserver.default.svc.cluster.local/get?type=dl"
+        valueLocation: "tasks"
