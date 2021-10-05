@@ -22,9 +22,7 @@ ydl-serverは次のコンポーネントで構成される
 以下のような構造で動作する。  
 ![ydl](./ydl-server.drawio.svg)
 
-### ydl-serverの実行方法
-
-#### サービスのセットアップ  
+### ydl-serverのセットアップ  
 RaspberryPi上にk8s環境およびgitlabサーバがあることを前提としています。
 
 1) KEDAをクラスタ上に構築する
@@ -52,7 +50,7 @@ kubectl apply -k ./serverless/keda/overlay/
 kubectl apply -f ./serverless/manifests/ydl-server/
 ```
 
-#### サービスの利用方法
+### ydl-serverの利用方法
 
 ydl-apiserverに紐づくExternalIPに対してGETリクエストを送信する。  
 本プロジェクトでは<192.168.3.202>が設定されている。  
