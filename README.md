@@ -34,7 +34,7 @@ kubectl apply -k ./serverless/keda/overlay/
 
 2) gitlab環境に本プロジェクトをforkし、`gitlab-ci.yaml`によってコンテナをビルドする。  
 
-3) すべてのyamlファイル内の`ScaledJob.spec.jobTargetRef.template.spec.containers.image`を、各々のコンテナレジストリに設定し直す。
+3) すべてのyamlファイル内の`**.template.spec.containers.image`を、各々のコンテナレジストリに設定し直す。
 
 4) `ydl-converter.yaml`および`ydl-downloader.yaml`の`ScaledJob.spec.jobTargetRef.template`の`volumes`以下の情報を編集する。  
 本環境ではストレージバックエンドに`glusterfs`を用いている（`endpoints: glusterfs-cluster`は定義済み）
