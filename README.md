@@ -22,9 +22,7 @@ ydl-serverは次のコンポーネントで構成される
 以下のような構造で動作する。  
 ![ydl](./ydl-server.drawio.svg)
 
-### ydl-serverの実行方法
-
-#### サービスのセットアップ  
+### ydl-serverのセットアップ  
 RaspberryPi上にk8s環境およびgitlabサーバがあることを前提としています。
 
 1) KEDAをクラスタ上に構築する
@@ -34,7 +32,7 @@ kubectl apply -k ./serverless/keda/overlay/
 
 2) gitlab環境に本プロジェクトをforkし、`gitlab-ci.yaml`によってコンテナをビルドする。  
 
-3) すべてのyamlファイル内の`ScaledJob.spec.jobTargetRef.template.spec.containers.image`を、各々のコンテナレジストリに設定し直す。
+3) すべてのyamlファイル内の`**.template.spec.containers.image`を、各々のコンテナレジストリに設定し直す。
 
 4) `ydl-converter.yaml`および`ydl-downloader.yaml`の`ScaledJob.spec.jobTargetRef.template`の`volumes`以下の情報を編集する。  
 本環境ではストレージバックエンドに`glusterfs`を用いている（`endpoints: glusterfs-cluster`は定義済み）
@@ -52,7 +50,7 @@ kubectl apply -k ./serverless/keda/overlay/
 kubectl apply -f ./serverless/manifests/ydl-server/
 ```
 
-#### サービスの利用方法
+### ydl-serverの利用方法
 
 ydl-apiserverに紐づくExternalIPに対してGETリクエストを送信する。  
 本プロジェクトでは<192.168.3.202>が設定されている。  
