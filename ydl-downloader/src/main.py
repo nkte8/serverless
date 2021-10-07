@@ -26,7 +26,7 @@ if __name__ == "__main__":
     REST_URL=os.environ['REST_URL']
     response = requests.get(REST_URL.rstrip('/') + "/pop?type=dl")
     res = json.loads(response.text)
-
+    print("URL=" + res.get("url"))
     ydl = downloader.YoutubeDL()
     with ydl:
         info_dict = ydl.extract_info(res.get("url"), download=False)
