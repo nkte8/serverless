@@ -9,7 +9,7 @@ ENV LC_ALL=ja_JP.UTF-8
 EXPOSE 80
 
 COPY src/ /usr/local/bin/
-RUN chmod +x /usr/local/bin/* && \
-mkdir /convert
+RUN chmod +x -R /usr/local/bin
 
+WORKDIR /convert
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
