@@ -12,6 +12,10 @@ spec:
       spec:
         containers:
           - image: registry.neko.lab:5005/root/serverless/ydl-converter
+            resources:
+              requests:
+                cpu: 400m
+                memory: 50Mi
             name: ydl-converter
             imagePullPolicy: Always
             volumeMounts:
