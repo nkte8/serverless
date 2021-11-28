@@ -1,11 +1,15 @@
 FROM golang:1.15.6 as builder
 
 ENV GOPATH=
-
+ENV CGO_ENABLED=0
 WORKDIR /go
 COPY . .
-RUN ls
-RUN go mod download
-RUN go build -o ./metric-server ./src/main.go
+RUN go mod download && \
+    go build -o /metric-server ./src/main.go && \
+    chmod +x /metric-server
 
-CMD ["./metric-server"]
+FROM alpine:3.14.3
+WORKDIR /
+ENV TZ=Asia/Tokyo
+COPY --from=builder /metric-server /usr/local/bin
+ENTRYPOINT ["metric-server"]
