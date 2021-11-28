@@ -1,0 +1,20 @@
+FROM golang:1.17.3 as builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Tokyo
+WORKDIR /workspace
+
+ENV ARCH=arm
+RUN git clone -b v2.5.0 https://github.com/kedacore/keda.git && \ 
+    cd keda && \ 
+    go mod tidy && \ 
+    make adapter
+RUN mkdir -p /apiserver.local.config/certificates && \ 
+    chmod -R 777 /apiserver.local.config
+
+FROM gcr.io/distroless/static:nonroot
+WORKDIR /
+COPY --from=builder --chown=nonroot:nonroot /workspace/keda/bin/keda-adapter .
+COPY --from=builder --chown=nonroot:nonroot /apiserver.local.config  /apiserver.local.config
+USER nonroot:nonroot
+ENTRYPOINT ["/keda-adapter", "--secure-port=6443", "--logtostderr=true", "--v=0"]
