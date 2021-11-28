@@ -1,9 +1,17 @@
-#https://keda.sh/docs/2.1/concepts/scaling-jobs/
+#https://keda.sh/docs/2.5/concepts/scaling-jobs/
 apiVersion: keda.sh/v1alpha1
 kind: ScaledJob
 metadata:
   name: ydl-converter
 spec:
+  maxReplicaCount: 5
+  successfulJobsHistoryLimit: 5
+  triggers:
+    - type: metrics-api
+      metadata:
+        targetValue: "1"
+        url: "http://ydl-apiserver.default.svc.cluster.local/get?type=cnv"
+        valueLocation: "tasks"
   jobTargetRef:
     completions: 1
     parallelism: 1
@@ -35,11 +43,3 @@ spec:
               endpoints: glusterfs-cluster
               path: /gvol/Data/Temporary
               readOnly: false
-  maxReplicaCount: 5
-  successfulJobsHistoryLimit: 5
-  triggers:
-    - type: metrics-api
-      metadata:
-        targetValue: "1"
-        url: "http://ydl-apiserver.default.svc.cluster.local/get?type=cnv"
-        valueLocation: "tasks"
