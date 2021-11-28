@@ -1,0 +1,17 @@
+FROM golang:1.17.3 as builder
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Asia/Tokyo
+WORKDIR /workspace
+
+ENV ARCH=arm
+RUN git clone -b v2.5.0 https://github.com/kedacore/keda.git && \ 
+    cd keda && \ 
+    go mod tidy && \ 
+    make manager
+
+FROM gcr.io/distroless/static:nonroot
+WORKDIR /
+COPY --from=builder --chown=nonroot:nonroot /workspace/keda/bin/keda .
+USER nonroot:nonroot
+ENTRYPOINT ["/keda", "--zap-log-level=info", "--zap-encoder=console"]
