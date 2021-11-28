@@ -1,20 +1,17 @@
-FROM ubuntu:20.04
+FROM python:3.8.12-alpine3.14 as builder
 
-RUN apt-get update && \
-apt-get install python3 python3-pip git language-pack-ja -y && \
-apt-get clean
+WORKDIR /workspace
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apk --no-cache --update add git gcc musl-dev
 
-ENV LC_ALL=ja_JP.UTF-8
+RUN pip3 install --no-cache --upgrade git+https://github.com/yt-dlp/yt-dlp.git@release && \
+    pip3 install --no-cache --upgrade requests pyinstaller
 
-RUN pip3 install --upgrade git+https://github.com/yt-dlp/yt-dlp.git@release && \
-pip3 install --upgrade requests 
+COPY src/ .
+RUN pyinstaller ./ydl-downloader.py --onefile
 
-EXPOSE 80
-
-COPY src/ /usr/local/bin/
-RUN chmod +x /usr/local/bin/* && \
-mkdir /download
-
+FROM alpine:3.14.3
 WORKDIR /download
-
-ENTRYPOINT ["python3","/usr/local/bin/main.py"]
+ENV TZ=Asia/Tokyo
+COPY --from=builder /workspace/dist/ydl-downloader /usr/local/bin/
+ENTRYPOINT ["ydl-downloader"]

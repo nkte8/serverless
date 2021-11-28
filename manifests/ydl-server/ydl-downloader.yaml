@@ -26,8 +26,6 @@ spec:
               - mountPath: /download
                 name: savedir
             env:
-              - name: TZ
-                value: Asia/Tokyo
               - name: REST_URL
                 value: "http://ydl-apiserver.default.svc.cluster.local/"
         restartPolicy: Never
