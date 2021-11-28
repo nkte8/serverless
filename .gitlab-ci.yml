@@ -26,3 +26,21 @@ ydl-apiserver:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - docker build ./${CI_JOB_NAME} -t "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
     - docker push "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+
+keda:
+  tags: [docker]
+  stage: build
+  timeout: 3 hours
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build ./keda-build/${CI_JOB_NAME} -t "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+    - docker push "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+
+keda-metrics-apiserver:
+  tags: [docker]
+  stage: build
+  timeout: 3 hours
+  script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker build ./keda-build/${CI_JOB_NAME} -t "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
+    - docker push "${CI_REGISTRY_IMAGE}/${CI_JOB_NAME}:${CI_COMMIT_TAG:=latest}"
