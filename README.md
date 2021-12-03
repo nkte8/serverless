@@ -26,36 +26,24 @@ ydl-serverは次のコンポーネントで構成される
 RaspberryPi上にk8s環境およびgitlabサーバがあることを前提としています。
 
 1) KEDAをクラスタ上に構築する
+RaspberryPi上にデプロイする場合は、arm64アーキテクチャ用イメージの使用、またはkedaをビルドし、マニフェスト内の参照先イメージを書き換えること
 ```sh 
-kubectl apply -k ./serverless/keda/overlay/
+kubectl apply -k ./serverless/keda/base/
 ```
 
-2) gitlab環境に本プロジェクトをforkし、`gitlab-ci.yaml`によってコンテナをビルドする。  
+2) ydl-apiserver、ydl-converter、ydl-downloaderイメージをgitlab等でdockerfileをビルドする
 
-3) すべてのyamlファイル内の`**.template.spec.containers.image`を、各々のコンテナレジストリに設定し直す。
-
-4) `ydl-converter.yaml`および`ydl-downloader.yaml`の`ScaledJob.spec.jobTargetRef.template`の`volumes`以下の情報を編集する。  
-本環境ではストレージバックエンドに`glusterfs`を用いている（`endpoints: glusterfs-cluster`は定義済み）
-```yaml
-        volumes:
-          - name: savedir
-            glusterfs: ## ファイルを保存するvolumeを定義
-              endpoints: glusterfs-cluster ## 別途endpointsを定義
-              path: /gvol/Data/Temporary ## ファイルの保存先を設定
-              readOnly: false
-```
-
-5) REST-APIサーバ・スケーラーを起動する
+3) REST-APIサーバ・スケーラーを起動する
+カスタマイズを行う場合、`overlay`ディレクトリを作成してkustomizeすると良い。
 ```sh
-kubectl apply -f ./serverless/manifests/ydl-server/
+kubectl apply -k ./serverless/manifests/ydl-server/base/
 ```
 
 ### ydl-serverの利用方法
 
-ydl-apiserverに紐づくExternalIPに対してGETリクエストを送信する。  
-本プロジェクトでは<192.168.3.202>が設定されている。  
+ydl-apiserverに紐づくExternalIPに対してGETリクエストを送信する。
 ```sh
-curl "http://192.168.3.202/request?fmt=<フォーマット>&url=<youtubeのURL>"
+curl "http://<Serviceで設定したEXTERNAL-IP>/request?fmt=<フォーマット>&url=<youtubeのURL>"
 ```
 
 youtubeからのダウンロードについては、現在以下のフォーマットに対応している  
