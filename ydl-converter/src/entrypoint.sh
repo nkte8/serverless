@@ -5,7 +5,7 @@ JSON=`curl -s "${REST_URL%/}/pop?type=cnv" | jq '.'`
 [[ $JSON == "" ]] && exit 0
 
 FILENAME=`echo "${JSON}" | jq '.url' | sed 's/"//g'`
-FILENAME=`echo ${FILENAME} | base64 --decode`
+FILENAME=`echo ${FILENAME} | base64 -d`
 FORMAT=`echo "${JSON}" | jq '.fmt' | sed 's/"//g'`
 CRF=`echo "${JSON}" | jq '.crf' | sed 's/"//g'`
 echo "FILENAME=${FILENAME}"
