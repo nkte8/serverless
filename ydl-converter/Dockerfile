@@ -1,9 +1,9 @@
-FROM ubuntu:20.04
+FROM alpine:3.14.3
 
-RUN apt-get update && \
-apt-get install curl ffmpeg jq language-pack-ja -y && \
-apt-get clean
+ENV TZ=Asia/Tokyo
+ENV DEBIAN_FRONTEND=noninteractive
 
+RUN apk --no-cache --update add curl ffmpeg jq bash
 ENV LC_ALL=ja_JP.UTF-8
 
 EXPOSE 80

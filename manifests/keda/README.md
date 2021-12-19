@@ -11,6 +11,14 @@ KEDAはarmアーキテクチャに対応していない
 暫定対処として、有志のdocker imageに置き換えて利用している(v2.1.0)  
 https://github.com/kedacore/keda/issues/779  
 
+mohsinonxrm氏がビルドしている  
+https://hub.docker.com/repository/docker/mohsinonxrm/keda  
+https://hub.docker.com/repository/docker/mohsinonxrm/keda-metrics-apiserver  
+
+## arm用イメージのビルド
+
+上記のイメージを使用する他、各個人の環境でビルドすることも可能。[ビルド方法](../../keda-build/README.md)を参照してください。  
+
 ## Metrics API serverについて
 
 KEDAのMetrics API serverを用いると、特定のREST APIサーバから情報を一定期間毎に取得し、
