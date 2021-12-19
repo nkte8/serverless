@@ -4,8 +4,6 @@ kind: ScaledJob
 metadata:
   name: ydl-converter
 spec:
-  maxReplicaCount: 5
-  successfulJobsHistoryLimit: 5
   triggers:
     - type: metrics-api
       metadata:
@@ -19,27 +17,16 @@ spec:
     template:
       spec:
         containers:
-          - image: registry.neko.lab:5005/root/serverless/ydl-converter
-            resources:
-              requests:
-                cpu: 400m
-                memory: 50Mi
+          - image: ydl-converter:latest
             name: ydl-converter
             imagePullPolicy: Always
             volumeMounts:
               - mountPath: /convert
                 name: savedir
             env:
-              - name: TZ
-                value: Asia/Tokyo
               - name: REST_URL
                 value: "http://ydl-apiserver.default.svc.cluster.local/"
-              - name: LOG_FREQ
-                value: "1s"
         restartPolicy: Never
         volumes:
           - name: savedir
-            glusterfs:
-              endpoints: glusterfs-cluster
-              path: /gvol/Data/Temporary
-              readOnly: false
+            emptyDir: {}

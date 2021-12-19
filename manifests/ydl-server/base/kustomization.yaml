@@ -1,0 +1,4 @@
+resources:
+  - ydl-converter.yaml
+  - ydl-downloader.yaml
+  - ydl-apiserver.yaml

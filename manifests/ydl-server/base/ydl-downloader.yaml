@@ -4,8 +4,6 @@ kind: ScaledJob
 metadata:
   name: ydl-downloader
 spec:
-  maxReplicaCount: 5
-  successfulJobsHistoryLimit: 5
   triggers:
     - type: metrics-api
       metadata:
@@ -19,7 +17,7 @@ spec:
     template:
       spec:
         containers:
-          - image: registry.neko.lab:5005/root/serverless/ydl-downloader
+          - image: ydl-downloader:latest
             name: ydl-downloader
             imagePullPolicy: Always
             volumeMounts:
@@ -31,7 +29,4 @@ spec:
         restartPolicy: Never
         volumes:
           - name: savedir
-            glusterfs:
-              endpoints: glusterfs-cluster
-              path: /gvol/Data/Temporary
-              readOnly: false
+            emptyDir: {}
