@@ -21,9 +21,6 @@ ffmpeg -i "/convert/${FILENAME}.video" -i "/convert/${FILENAME}.audio" -c:v copy
 [[ -e /convert/"${FILENAME}.video" ]] && rm -v "/convert/${FILENAME}.video"
 [[ -e /convert/"${FILENAME}.audio" ]] && rm -v "/convert/${FILENAME}.audio"
 
-OWNER=`ls -ld /convert/ | awk '{ print $3 }'`
-chown ${OWNER}:${OWNER} /convert/"${FILENAME}.${FORMAT}"
-
 echo "> ls -lh /convert/ | grep -F ${FILENAME}"
 ls -lh /convert/ | grep -F "${FILENAME}"
 
